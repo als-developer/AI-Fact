@@ -1,0 +1,61 @@
+{
+  "name": "truth-engine-ultimate",
+  "version": "3.0.0",
+  "description": "Sovereign AI Fact-Checking Platform - Zero-Trust Enterprise Edition",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --remote",
+    "dev:local": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "deploy:staging": "wrangler deploy --env staging",
+    "types": "wrangler types",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "db:migrate": "wrangler d1 migrations apply truth-engine-db",
+    "db:seed": "wrangler d1 execute truth-engine-db --file=./src/db/seed/seed.sql",
+    "db:generate": "wrangler d1 migrations create truth-engine-db",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build": "tsc",
+    "cf-typegen": "wrangler types",
+    "start": "wrangler dev",
+    "preview": "wrangler preview",
+    "logs": "wrangler tail",
+    "secret:put": "wrangler secret put",
+    "secret:list": "wrangler secret list",
+    "clean": "rm -rf dist node_modules",
+    "benchmark": "tsx scripts/benchmark.ts",
+    "backup": "tsx scripts/backup.ts"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.2.2",
+    "@upstash/ratelimit": "^1.0.0",
+    "@upstash/redis": "^1.28.3",
+    "hono": "^4.2.0",
+    "zod": "^3.22.4",
+    "ulid": "^2.3.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pdf-parse": "^1.1.1",
+    "mime-types": "^2.1.35",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240208.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2",
+    "wrangler": "^3.28.3",
+    "tsx": "^4.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
