@@ -1,0 +1,124 @@
+name = "truth-engine-ultimate"
+main = "src/index.ts"
+compatibility_date = "2024-12-18"
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+[vars]
+ENVIRONMENT = "production"
+API_VERSION = "v3"
+DEFAULT_MODEL = "sentence-transformers/LaBSE"
+MAX_TEXT_LENGTH = "50000"
+DEFAULT_RATE_LIMIT = "100"
+CACHE_TTL = "86400"
+JWT_SECRET = "your-super-secret-jwt-key-change-this"
+ENCRYPTION_KEY = "your-32-byte-encryption-key-here"
+CORS_ORIGINS = "https://chat.openai.com,https://chatgpt.com,https://claude.ai,https://gemini.google.com,https://truthengine.ai"
+
+# API Keys
+HUGGINGFACE_API_KEY = ""
+TAVILY_API_KEY = ""
+COHERE_API_KEY = ""
+OPENAI_API_KEY = ""
+LEMON_SQUEEZY_API_KEY = ""
+LEMON_SQUEEZY_STORE_ID = ""
+LEMON_SQUEEZY_WEBHOOK_SECRET = ""
+
+# ============================================
+# D1 DATABASE
+# ============================================
+[[d1_databases]]
+binding = "DB"
+database_name = "truth-engine-db"
+database_id = "your-d1-database-id"
+
+# ============================================
+# R2 BUCKETS
+# ============================================
+[[r2_buckets]]
+binding = "DOCUMENTS"
+bucket_name = "truth-engine-documents"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "truth-engine-assets"
+
+[[r2_buckets]]
+binding = "BACKUPS"
+bucket_name = "truth-engine-backups"
+
+# ============================================
+# KV NAMESPACES
+# ============================================
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "your-session-kv-id"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "your-ratelimit-kv-id"
+
+# ============================================
+# QUEUES
+# ============================================
+[[queues]]
+binding = "JOB_QUEUE"
+queue_name = "truth-engine-jobs"
+
+[[queues]]
+binding = "WEBHOOK_QUEUE"
+queue_name = "truth-engine-webhooks"
+
+[[queues]]
+binding = "EMAIL_QUEUE"
+queue_name = "truth-engine-emails"
+
+# ============================================
+# CRON TRIGGERS
+# ============================================
+[triggers]
+crons = ["0 */6 * * *", "0 0 * * *", "*/15 * * * *"]
+
+# ============================================
+# DURABLE OBJECTS
+# ============================================
+[[durable_objects.bindings]]
+name = "WEBSOCKET_SYNC"
+class_name = "WebSocketSync"
+
+[[durable_objects.bindings]]
+name = "JOB_TRACKER"
+class_name = "JobTracker"
+
+# ============================================
+# OBSERVABILITY
+# ============================================
+[observability]
+enabled = true
+head_sampling_rate = 0.1
+
+# ============================================
+# PRODUCTION ENVIRONMENT
+# ============================================
+[env.production]
+routes = [{ pattern = "api.truthengine.ai/*", zone_id = "your-zone-id" }]
+vars = { ENVIRONMENT = "production" }
+
+# ============================================
+# STAGING ENVIRONMENT
+# ============================================
+[env.staging]
+routes = [{ pattern = "staging.truthengine.ai/*", zone_id = "your-zone-id" }]
+vars = { ENVIRONMENT = "staging" }
+
+# ============================================
+# DEVELOPMENT ENVIRONMENT
+# ============================================
+[env.dev]
+routes = [{ pattern = "dev.truthengine.ai/*", zone_id = "your-zone-id" }]
+vars = { ENVIRONMENT = "development" }
