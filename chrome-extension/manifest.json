@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "TruthEngine Ultimate - AI Fact Checker",
+  "version": "3.0.0",
+  "description": "The most advanced AI hallucination detector. Verify ChatGPT, Claude, and Gemini responses instantly with color-coded fact-checking.",
+  "author": "TruthEngine Team",
+  "homepage_url": "https://truthengine.ai",
+  
+  "permissions": ["storage", "activeTab", "alarms", "notifications"],
+  
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://api.truthengine.ai/*",
+    "https://*.truthengine.ai/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "TruthEngine Ultimate",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*", "styles.css", "popup.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
