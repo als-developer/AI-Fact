@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthEngine Ultimate - Enterprise Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .sidebar-link.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .sidebar-link { transition: all 0.2s ease; }
+        .sidebar-link:hover:not(.active) { background: #f3f4f6; color: #4f46e5; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-4 fixed w-full top-0 z-50">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center"><span class="text-white text-xl">🛡️</span></div>
+                <div><h1 class="text-xl font-bold text-gray-800">TruthEngine</h1><p class="text-xs text-gray-500">Enterprise Fact-Checking Platform</p></div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="text-right"><p class="text-xs text-gray-500">Organization</p><p class="text-sm font-semibold text-gray-700" id="orgName">Loading...</p></div>
+                <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center cursor-pointer"><span class="text-white font-bold" id="userInitial">U</span></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-16 h-full w-64 bg-white border-r border-gray-200 pt-6">
+        <nav class="space-y-1 px-4">
+            <a href="#" onclick="showSection('dashboard')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="dashboard"><span>📊</span><span>Dashboard</span></a>
+            <a href="#" onclick="showSection('verify')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="verify"><span>🔍</span><span>Verify Document</span></a>
+            <a href="#" onclick="showSection('history')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="history"><span>📜</span><span>History</span></a>
+            <a href="#" onclick="showSection('team')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="team"><span>👥</span><span>Team Management</span></a>
+            <a href="#" onclick="showSection('billing')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="billing"><span>💳</span><span>Billing</span></a>
+            <a href="#" onclick="showSection('api')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="api"><span>🔑</span><span>API Keys</span></a>
+            <a href="#" onclick="showSection('settings')" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all" data-section="settings"><span>⚙️</span><span>Settings</span></a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 mt-16 p-8">
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section">
+            <div class="mb-8"><h2 class="text-2xl font-bold text-gray-800">Dashboard</h2><p class="text-gray-500">Welcome back! Here's your verification overview</p></div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-sm card-hover"><div class="flex items-center justify-between mb-4"><span class="text-3xl">📊</span><span class="text-xs text-gray-400">This month</span></div><p class="text-2xl font-bold text-gray-800" id="totalVerifications">0</p><p class="text-sm text-gray-500">Total Verifications</p></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm card-hover"><div class="flex items-center justify-between mb-4"><span class="text-3xl">✅</span><span class="text-xs text-gray-400">Accuracy</span></div><p class="text-2xl font-bold text-green-600" id="avgAccuracy">0%</p><p class="text-sm text-gray-500">Average Truth Score</p></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm card-hover"><div class="flex items-center justify-between mb-4"><span class="text-3xl">⚠️</span><span class="text-xs text-gray-400">Risk</span></div><p class="text-2xl font-bold text-red-600" id="falseClaims">0</p><p class="text-sm text-gray-500">False Claims Detected</p></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm card-hover"><div class="flex items-center justify-between mb-4"><span class="text-3xl">💎</span><span class="text-xs text-gray-400">Credits</span></div><p class="text-2xl font-bold text-indigo-600" id="remainingCredits">0</p><p class="text-sm text-gray-500">Remaining Credits</p></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-4">Verification Trend</h3><canvas id="trendChart" height="200"></canvas></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-4">Risk Distribution</h3><canvas id="riskChart" height="200"></canvas></div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-4">Recent Activity</h3><div class="space-y-3" id="recentActivity"><div class="text-center text-gray-400 py-8">Loading activities...</div></div></div>
+        </div>
+
+        <!-- Verify Section -->
+        <div id="verifySection" class="section hidden">
+            <div class="mb-8"><h2 class="text-2xl font-bold text-gray-800">Verify Document</h2><p class="text-gray-500">Upload or paste text for AI fact-checking</p></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-semibold text-gray-800 mb-4">Upload Document</h3>
+                    <div id="dropzone" class="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-indigo-500 transition-all"><span class="text-5xl mb-4 block">📄</span><p class="text-gray-600">Drag & drop PDF or text file here</p><p class="text-xs text-gray-400 mt-2">or click to browse</p><input type="file" id="fileInput" accept=".pdf,.txt" class="hidden"></div>
+                    <div class="mt-4"><textarea id="textInput" rows="6" class="w-full border border-gray-300 rounded-xl p-4 focus:outline-none focus:border-indigo-500" placeholder="Or paste text directly here..."></textarea></div>
+                    <button onclick="startVerification()" class="w-full mt-4 gradient-bg text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all">🚀 Start Verification</button>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-4">Verification Results</h3><div id="resultsArea" class="text-center text-gray-400 py-12"><span class="text-4xl mb-4 block">🔍</span><p>Results will appear here</p></div></div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div id="historySection" class="section hidden"><div class="mb-8"><h2 class="text-2xl font-bold text-gray-800">Verification History</h2><p class="text-gray-500">View all past verifications</p></div><div class="bg-white rounded-2xl shadow-sm overflow-hidden"><table class="w-full"><thead class="bg-gray-50 border-b border-gray-200"><tr><th class="text-left p-4 text-sm font-semibold text-gray-600">Date</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Document</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Score</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Verdict</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Actions</th></tr></thead><tbody id="historyTable"><tr><td colspan="5" class="text-center p-8 text-gray-400">Loading history...</td></tr></tbody></table></div></div>
+
+        <!-- Team Section -->
+        <div id="teamSection" class="section hidden"><div class="mb-8 flex justify-between items-center"><div><h2 class="text-2xl font-bold text-gray-800">Team Management</h2><p class="text-gray-500">Invite and manage team members</p></div><button onclick="openInviteModal()" class="gradient-bg text-white px-6 py-2 rounded-xl font-semibold">+ Invite Member</button></div><div class="bg-white rounded-2xl shadow-sm overflow-hidden"><table class="w-full"><thead class="bg-gray-50 border-b border-gray-200"><tr><th class="text-left p-4 text-sm font-semibold text-gray-600">Member</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Role</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Status</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Joined</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Actions</th></tr></thead><tbody id="teamTable"><tr><td colspan="5" class="text-center p-8 text-gray-400">Loading team members...</td></tr></tbody></table></div></div>
+
+        <!-- Billing Section -->
+        <div id="billingSection" class="section hidden"><div class="mb-8"><h2 class="text-2xl font-bold text-gray-800">Billing & Subscription</h2><p class="text-gray-500">Manage your plan and payment methods</p></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"><div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-2">Current Plan</h3><p class="text-2xl font-bold text-indigo-600" id="currentPlan">Free</p><p class="text-sm text-gray-500 mt-2" id="planFeatures">100 verifications/month</p></div><div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-2">Usage</h3><div class="mb-2"><div class="flex justify-between text-sm"><span>This month</span><span id="usageCurrent">0</span></div><div class="w-full bg-gray-200 rounded-full h-2 mt-1"><div id="usageBar" class="gradient-bg h-2 rounded-full" style="width: 0%"></div></div></div></div><div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-2">Next Billing</h3><p class="text-lg font-semibold" id="nextBilling">—</p><button onclick="manageSubscription()" class="mt-4 w-full border border-indigo-600 text-indigo-600 py-2 rounded-xl font-semibold hover:bg-indigo-50 transition-all">Manage Subscription</button></div></div><div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="font-semibold text-gray-800 mb-4">Invoices</h3><div id="invoicesList" class="space-y-2"><div class="text-center text-gray-400 py-4">No invoices yet</div></div></div></div>
+
+        <!-- API Keys Section -->
+        <div id="apiSection" class="section hidden"><div class="mb-8 flex justify-between items-center"><div><h2 class="text-2xl font-bold text-gray-800">API Keys</h2><p class="text-gray-500">Manage API access for programmatic verification</p></div><button onclick="createApiKey()" class="gradient-bg text-white px-6 py-2 rounded-xl font-semibold">+ Create API Key</button></div><div class="bg-white rounded-2xl shadow-sm overflow-hidden"><table class="w-full"><thead class="bg-gray-50 border-b border-gray-200"><tr><th class="text-left p-4 text-sm font-semibold text-gray-600">Name</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Key</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Created</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Last Used</th><th class="text-left p-4 text-sm font-semibold text-gray-600">Actions</th></tr></thead><tbody id="apiKeysTable"><tr><td colspan="5" class="text-center p-8 text-gray-400">Loading API keys...</td></tr></tbody></table></div></div>
+
+        <!-- Settings Section -->
+        <div id="settingsSection" class="section hidden"><div class="mb-8"><h2 class="text-2xl font-bold text-gray-800">Settings</h2><p class="text-gray-500">Configure your organization settings</p></div><div class="bg-white rounded-2xl p-6 shadow-sm mb-6"><h3 class="font-semibold text-gray-800 mb-4">Organization Settings</h3><div class="space-y-4"><div><label class="block text-sm font-medium text-gray-700 mb-1">Organization Name</label><input type="text" id="orgNameInput" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Webhook URL</label><input type="url" id="webhookUrl" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500" placeholder="https://your-server.com/webhook"></div><div><label class="block text-sm font-medium text-gray-700 mb-1">Default Verification Mode</label><select id="defaultMode" class="w-full border border-gray-300 rounded-lg p-2"><option value="standard">Standard</option><option value="deep">Deep (Premium)</option><option value="academic">Academic</option><option value="compliance">Compliance</option></select></div><button onclick="saveSettings()" class="gradient-bg text-white px-6 py-2 rounded-lg font-semibold">Save Changes</button></div></div></div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div id="inviteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"><div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4"><h3 class="text-xl font-bold text-gray-800 mb-4">Invite Team Member</h3><input type="email" id="inviteEmail" class="w-full border border-gray-300 rounded-lg p-3 mb-4" placeholder="Email address"><select id="inviteRole" class="w-full border border-gray-300 rounded-lg p-3 mb-6"><option value="member">Member</option><option value="admin">Admin</option></select><div class="flex space-x-3"><button onclick="sendInvite()" class="flex-1 gradient-bg text-white py-2 rounded-lg font-semibold">Send Invite</button><button onclick="closeInviteModal()" class="flex-1 border border-gray-300 py-2 rounded-lg font-semibold">Cancel</button></div></div></div>
+
+    <script>
+        const API_URL = 'https://api.truthengine.ai/v1';
+        let authToken = localStorage.getItem('authToken');
+        let trendChart, riskChart;
+
+        async function loadDashboardData() {
+            try {
+                const response = await fetch(`${API_URL}/org/stats`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('totalVerifications').textContent = data.data.total_verifications || 0;
+                    document.getElementById('avgAccuracy').textContent = `${data.data.avg_accuracy || 0}%`;
+                    document.getElementById('falseClaims').textContent = data.data.false_claims || 0;
+                    document.getElementById('remainingCredits').textContent = data.data.remaining_credits || 0;
+                    document.getElementById('orgName').textContent = data.data.org_name || 'Your Organization';
+                    updateCharts(data.data);
+                    updateRecentActivity(data.data.recent_activity || []);
+                }
+            } catch (error) { console.error('Failed to load dashboard:', error); }
+        }
+
+        function updateCharts(data) {
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            const riskCtx = document.getElementById('riskChart').getContext('2d');
+            if (trendChart) trendChart.destroy();
+            if (riskChart) riskChart.destroy();
+            trendChart = new Chart(trendCtx, { type: 'line', data: { labels: data.trend_dates || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Verifications', data: data.trend_values || [0,0,0,0,0,0,0], borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: true } });
+            riskChart = new Chart(riskCtx, { type: 'doughnut', data: { labels: ['Verified', 'Suspicious', 'False'], datasets: [{ data: [data.verified_percent || 70, data.suspicious_percent || 20, data.false_percent || 10], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }] }, options: { responsive: true, maintainAspectRatio: true } });
+        }
+
+        function updateRecentActivity(activities) {
+            const container = document.getElementById('recentActivity');
+            if (!activities.length) { container.innerHTML = '<div class="text-center text-gray-400 py-8">No recent activity</div>'; return; }
+            container.innerHTML = activities.map(a => `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl"><div class="flex items-center space-x-3"><span class="text-2xl">${a.icon || '📄'}</span><div><p class="font-medium text-gray-800">${a.title}</p><p class="text-xs text-gray-400">${a.time}</p></div></div><span class="text-sm font-semibold ${a.score >= 70 ? 'text-green-600' : a.score >= 40 ? 'text-yellow-600' : 'text-red-600'}">${a.score}%</span></div>`).join('');
+        }
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`${sectionName}Section`).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`.sidebar-link[data-section="${sectionName}"]`).classList.add('active');
+            if (sectionName === 'dashboard') loadDashboardData();
+            if (sectionName === 'history') loadHistory();
+            if (sectionName === 'team') loadTeamMembers();
+            if (sectionName === 'api') loadApiKeys();
+            if (sectionName === 'billing') loadBillingData();
+        }
+
+        async function startVerification() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) { alert('Please enter text to verify'); return; }
+            document.getElementById('resultsArea').innerHTML = '<div class="text-center py-12"><div class="animate-pulse-slow">🔍 Analyzing claims...</div></div>';
+            try {
+                const response = await fetch(`${API_URL}/verify/sync`, { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ text, engine_mode: 'standard' }) });
+                const data = await response.json();
+                if (data.success) displayResults(data.data);
+                else throw new Error(data.error?.message);
+            } catch (error) { document.getElementById('resultsArea').innerHTML = `<div class="text-center py-12 text-red-500">❌ Error: ${error.message}</div>`; }
+        }
+
+        function displayResults(result) {
+            const scoreColor = result.overall_score >= 70 ? 'text-green-600' : result.overall_score >= 40 ? 'text-yellow-600' : 'text-red-600';
+            let claimsHtml = '';
+            if (result.claims?.length) {
+                claimsHtml = '<div class="mt-4 space-y-2 max-h-96 overflow-y-auto">';
+                for (const claim of result.claims) {
+                    const claimColor = claim.color === 'green' ? 'bg-green-50 border-green-200' : claim.color === 'yellow' ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200';
+                    claimsHtml += `<div class="p-3 rounded-lg border ${claimColor}"><p class="text-sm">${escapeHtml(claim.claim)}</p><div class="flex items-center justify-between mt-2"><span class="text-xs font-semibold">${claim.verdict}</span><span class="text-xs text-gray-500">${Math.round(claim.confidence * 100)}% confidence</span></div>${claim.sources?.[0] ? `<a href="${claim.sources[0].url}" target="_blank" class="text-xs text-indigo-600 hover:underline mt-1 block">📎 View Source</a>` : ''}</div>`;
+                }
+                claimsHtml += '</div>';
+            }
+            document.getElementById('resultsArea').innerHTML = `<div class="text-center mb-4"><div class="text-4xl mb-2">${result.overall_score >= 70 ? '✅' : result.overall_score >= 40 ? '⚠️' : '❌'}</div><p class="text-2xl font-bold ${scoreColor}">${Math.round(result.overall_score)}% Truth Score</p><p class="text-sm text-gray-500">Verdict: ${result.verdict}</p></div><div class="grid grid-cols-3 gap-3 mb-4"><div class="text-center p-2 bg-green-50 rounded-lg"><p class="text-xl font-bold text-green-600">${result.summary?.verified_count || 0}</p><p class="text-xs text-gray-500">Verified</p></div><div class="text-center p-2 bg-yellow-50 rounded-lg"><p class="text-xl font-bold text-yellow-600">${result.summary?.suspicious_count || 0}</p><p class="text-xs text-gray-500">Suspicious</p></div><div class="text-center p-2 bg-red-50 rounded-lg"><p class="text-xl font-bold text-red-600">${result.summary?.false_count || 0}</p><p class="text-xs text-gray-500">False</p></div></div>${claimsHtml}<div class="mt-4 pt-4 border-t border-gray-100"><p class="text-xs text-gray-400">Processing time: ${result.processing_time_ms}ms</p></div>`;
+        }
+
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        function openInviteModal() { document.getElementById('inviteModal').classList.add('flex'); document.getElementById('inviteModal').classList.remove('hidden'); }
+        function closeInviteModal() { document.getElementById('inviteModal').classList.remove('flex'); document.getElementById('inviteModal').classList.add('hidden'); }
+        function manageSubscription() { window.open('https://truthengine.ai/pricing', '_blank'); }
+        async function loadHistory() { /* implementation */ }
+        async function loadTeamMembers() { /* implementation */ }
+        async function loadApiKeys() { /* implementation */ }
+        async function loadBillingData() { /* implementation */ }
+        async function createApiKey() { /* implementation */ }
+        async function sendInvite() { /* implementation */ }
+        async function saveSettings() { /* implementation */ }
+
+        document.addEventListener('DOMContentLoaded', () => { showSection('dashboard'); });
+    </script>
+</body>
+</html>
