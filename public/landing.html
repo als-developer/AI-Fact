@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthEngine Ultimate - AI Fact-Checking Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .animate-pulse-slow { animation: pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulseSlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center"><span class="text-white text-xl">🛡️</span></div>
+                <span class="text-xl font-bold text-gray-800">TruthEngine</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-600 hover:text-gray-900 transition">Features</a>
+                <a href="#pricing" class="text-gray-600 hover:text-gray-900 transition">Pricing</a>
+                <a href="#about" class="text-gray-600 hover:text-gray-900 transition">About</a>
+                <a href="/dashboard" class="text-gray-600 hover:text-gray-900 transition">Dashboard</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="/dashboard" class="hidden md:block text-gray-600 hover:text-gray-900">Sign In</a>
+                <a href="/dashboard" class="gradient-bg text-white px-6 py-2 rounded-xl font-semibold hover:opacity-90 transition">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="animate-float inline-block gradient-bg text-white px-4 py-1 rounded-full text-sm mb-6">✨ AI Hallucination Detection</div>
+            <h1 class="text-5xl md:text-7xl font-bold text-gray-900 mb-6">Stop AI <span class="gradient-text">Hallucinations</span> Instantly</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-10">TruthEngine verifies every claim from ChatGPT, Claude, and Gemini against real-time web sources. Color-coded results show you what's true, suspicious, or false.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/dashboard" class="gradient-bg text-white px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition">Start Free Trial →</a>
+                <a href="#demo" class="border border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition">Watch Demo</a>
+            </div>
+            <p class="text-sm text-gray-400 mt-6">Free tier: 100 verifications/month. No credit card required.</p>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div><div class="text-4xl font-bold text-indigo-600">99.9%</div><div class="text-gray-600 mt-2">Uptime SLA</div></div>
+                <div><div class="text-4xl font-bold text-indigo-600">&lt;500ms</div><div class="text-gray-600 mt-2">Avg Response Time</div></div>
+                <div><div class="text-4xl font-bold text-indigo-600">50+</div><div class="text-gray-600 mt-2">Languages Supported</div></div>
+                <div><div class="text-4xl font-bold text-indigo-600">1M+</div><div class="text-gray-600 mt-2">Claims Verified</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Enterprise-Grade Features</h2><p class="text-xl text-gray-600">Everything you need to verify AI-generated content</p></div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition"><div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4"><span class="text-2xl">🔍</span></div><h3 class="text-xl font-bold mb-2">Real-Time Fact Checking</h3><p class="text-gray-500">Verify claims against live web sources and academic databases instantly.</p></div>
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition"><div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4"><span class="text-2xl">🎙️</span></div><h3 class="text-xl font-bold mb-2">Audio Deepfake Detection</h3><p class="text-gray-500">Detect synthetic audio and AI-generated voice manipulation.</p></div>
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition"><div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4"><span class="text-2xl">🔒</span></div><h3 class="text-xl font-bold mb-2">Compliance Shield</h3><p class="text-gray-500">Scan for PII, PHI, financial data, and legal compliance risks.</p></div>
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition"><div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4"><span class="text-2xl">📊</span></div><h3 class="text-xl font-bold mb-2">Analytics Dashboard</h3><p class="text-gray-500">Track verification usage, accuracy scores, and team performance.</p></div>
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition"><div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4"><span class="text-2xl">🔑</span></div><h3 class="text-xl font-bold mb-2">API Access</h3><p class="text-gray-500">Integrate TruthEngine into your own applications with our REST API.</p></div>
+                <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition"><div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4"><span class="text-2xl">👥</span></div><h3 class="text-xl font-bold mb-2">Team Management</h3><p class="text-gray-500">Invite team members and manage shared verification credits.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-gray-50 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16"><h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h2><p class="text-xl text-gray-600">Choose the plan that works for your team</p></div>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="text-xl font-bold mb-2">Free</h3><p class="text-3xl font-bold mb-4">$0<span class="text-sm font-normal text-gray-500">/month</span></p><ul class="space-y-2 mb-6"><li class="text-sm">✓ 100 verifications/month</li><li class="text-sm">✓ Standard verification</li><li class="text-sm">✓ Basic support</li><li class="text-sm text-gray-400">✗ API access</li></ul><a href="/dashboard" class="block text-center border border-indigo-600 text-indigo-600 py-2 rounded-xl font-semibold hover:bg-indigo-50 transition">Get Started</a></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border-2 border-indigo-500 relative"><div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full">Most Popular</div><h3 class="text-xl font-bold mb-2">Pro</h3><p class="text-3xl font-bold mb-4">$49<span class="text-sm font-normal text-gray-500">/month</span></p><ul class="space-y-2 mb-6"><li class="text-sm">✓ 1,000 verifications/month</li><li class="text-sm">✓ Deep verification mode</li><li class="text-sm">✓ Priority support</li><li class="text-sm">✓ API access</li></ul><a href="/dashboard" class="block text-center gradient-bg text-white py-2 rounded-xl font-semibold hover:opacity-90 transition">Start Trial</a></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="text-xl font-bold mb-2">Business</h3><p class="text-3xl font-bold mb-4">$199<span class="text-sm font-normal text-gray-500">/month</span></p><ul class="space-y-2 mb-6"><li class="text-sm">✓ 10,000 verifications/month</li><li class="text-sm">✓ Team management (10 seats)</li><li class="text-sm">✓ Webhook support</li><li class="text-sm">✓ Dedicated support</li></ul><a href="/dashboard" class="block text-center border border-indigo-600 text-indigo-600 py-2 rounded-xl font-semibold hover:bg-indigo-50 transition">Contact Sales</a></div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="text-xl font-bold mb-2">Enterprise</h3><p class="text-3xl font-bold mb-4">Custom</p><ul class="space-y-2 mb-6"><li class="text-sm">✓ Unlimited verifications</li><li class="text-sm">✓ SSO & SAML</li><li class="text-sm">✓ On-premise deployment</li><li class="text-sm">✓ 24/7 support</li></ul><a href="/dashboard" class="block text-center border border-indigo-600 text-indigo-600 py-2 rounded-xl font-semibold hover:bg-indigo-50 transition">Contact Sales</a></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-6 gradient-bg">
+        <div class="max-w-4xl mx-auto text-center text-white"><h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to stop AI hallucinations?</h2><p class="text-xl opacity-90 mb-8">Join thousands of users who trust TruthEngine for accurate fact-checking.</p><a href="/dashboard" class="bg-white text-indigo-600 px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transition">Start Free Trial →</a></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 px-6"><div class="max-w-7xl mx-auto text-center"><p>&copy; 2024 TruthEngine. All rights reserved.</p></div></footer>
+</body>
+</html>
