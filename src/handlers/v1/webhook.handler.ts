@@ -73,3 +73,29 @@ webhookHandler.post('/test', zValidator('json', z.object({ url: z.string().url()
     return c.json({ success: false, error: String(error) }, 500);
   }
 });
+
+
+
+
+/**
+ * Lemon Squeezy webhook endpoint (no auth, signature verified)
+ * Add this to your existing webhook.handler.ts
+ */
+
+import { LemonSqueezyRealWebhookHandler } from '../../integrations/lemonsqueezy/real-webhook';
+
+// Add this endpoint to your webhook handler
+webhookHandler.post('/lemonsqueezy', async (c) => {
+  const signature = c.req.header('X-Signature') || '';
+  const payload = await c.req.json();
+  
+  try {
+    const handler = new LemonSqueezyRealWebhookHandler(c.env);
+    await handler.process(payload, signature);
+    
+    return c.json({ success: true });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    return c.json({ error: 'Webhook processing failed' }, 500);
+  }
+});
