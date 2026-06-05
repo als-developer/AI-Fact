@@ -1,7 +1,17 @@
-echo { > package.json
-echo   "name": "ai-fact", >> package.json
-echo   "version": "1.0.0", >> package.json
-echo   "main": "server.js", >> package.json
-echo   "scripts": { "start": "node server.js" }, >> package.json
-echo   "engines": { "node": "18.x" } >> package.json
-echo } >> package.json
+{
+  "name": "ai-fact",
+  "version": "1.0.0",
+  "description": "TruthEngine Ultimate - AI Fact-Checking Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0"
+  }
+}
