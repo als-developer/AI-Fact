@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthEngine Ultimate - AI Fact-Checking Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: monospace;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.9);
+        }
+        
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .claim {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .claim.true {
+            border-left: 4px solid #10b981;
+            background: rgba(16,185,129,0.1);
+        }
+        
+        .claim.suspicious {
+            border-left: 4px solid #f59e0b;
+            background: rgba(245,158,11,0.1);
+        }
+        
+        .claim.false {
+            border-left: 4px solid #ef4444;
+            background: rgba(239,68,68,0.1);
+        }
+        
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score.high {
+            color: #10b981;
+        }
+        
+        .score.medium {
+            color: #f59e0b;
+        }
+        
+        .score.low {
+            color: #ef4444;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .endpoints {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .endpoint {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .endpoint code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 32px; }
+            .container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🛡️</div>
+            <h1>TruthEngine Ultimate</h1>
+            <p class="subtitle">Enterprise AI Fact-Checking Platform</p>
+        </div>
+        
+        <div class="card">
+            <h2>🔍 Verify Text</h2>
+            <textarea id="inputText" rows="6" placeholder="Paste your text here to verify facts...&#10;&#10;Example:&#10;The Earth revolves around the Sun.&#10;Water boils at 100 degrees Celsius at sea level.&#10;The Great Wall of China is visible from space."></textarea>
+            <button id="verifyBtn" onclick="verifyText()">Verify Truth</button>
+            <div id="loading" style="display: none;">Processing... <span class="loading"></span></div>
+        </div>
+        
+        <div id="results" class="results"></div>
+        
+        <div class="card">
+            <h2>📡 API Endpoints</h2>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <strong>GET /health</strong><br>
+                    <code>Health check</code>
+                </div>
+                <div class="endpoint">
+                    <strong>POST /api/v1/verify</strong><br>
+                    <code>Verify text</code>
+                </div>
+                <div class="endpoint">
+                    <strong>GET /api/v1/stats</strong><br>
+                    <code>System statistics</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by TruthEngine Ultimate | AI Fact-Checking Technology</p>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = window.location.origin;
+        
+        async function verifyText() {
+            const text = document.getElementById('inputText').value;
+            if (!text.trim()) {
+                alert('Please enter some text to verify');
+                return;
+            }
+            
+            const verifyBtn = document.getElementById('verifyBtn');
+            const loading = document.getElementById('loading');
+            const resultsDiv = document.getElementById('results');
+            
+            verifyBtn.disabled = true;
+            loading.style.display = 'block';
+            resultsDiv.classList.remove('show');
+            
+            try {
+                const response = await fetch(`${API_URL}/api/v1/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.data);
+                } else {
+                    resultsDiv.innerHTML = `<div style="color: #ef4444;">Error: ${data.error?.message || 'Verification failed'}</div>`;
+                    resultsDiv.classList.add('show');
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div style="color: #ef4444;">Error: ${error.message}</div>`;
+                resultsDiv.classList.add('show');
+            } finally {
+                verifyBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            const score = data.overall_score;
+            let scoreClass = 'low';
+            if (score >= 70) scoreClass = 'high';
+            else if (score >= 40) scoreClass = 'medium';
+            
+            let claimsHtml = '';
+            if (data.claims && data.claims.length > 0) {
+                for (const claim of data.claims) {
+                    let claimClass = '';
+                    if (claim.verdict === 'TRUE') claimClass = 'true';
+                    else if (claim.verdict === 'SUSPICIOUS') claimClass = 'suspicious';
+                    else claimClass = 'false';
+                    
+                    claimsHtml += `
+                        <div class="claim ${claimClass}">
+                            <strong>${claim.verdict}</strong> (${Math.round(claim.confidence * 100)}% confidence)<br>
+                            ${escapeHtml(claim.claim)}
+                        </div>
+                    `;
+                }
+            }
+            
+            resultsDiv.innerHTML = `
+                <div class="card">
+                    <h2>📊 Verification Results</h2>
+                    <div class="score ${scoreClass}">${Math.round(score)}% Truth Score</div>
+                    <div class="verdict">Verdict: <strong>${data.verdict}</strong></div>
+                    ${data.summary ? `
+                        <div style="margin-top: 20px;">
+                            <h3>Summary</h3>
+                            <p>✅ Verified: ${data.summary.verified_count || 0}</p>
+                            <p>⚠️ Suspicious: ${data.summary.suspicious_count || 0}</p>
+                            <p>❌ False: ${data.summary.false_count || 0}</p>
+                            <p>Risk Level: <strong>${data.summary.risk_level || 'LOW'}</strong></p>
+                        </div>
+                    ` : ''}
+                    <div style="margin-top: 20px;">
+                        <h3>Claims Analysis</h3>
+                        ${claimsHtml}
+                    </div>
+                    <div style="margin-top: 20px; font-size: 12px; opacity: 0.7;">
+                        Processing time: ${data.processing_time_ms}ms
+                    </div>
+                </div>
+            `;
+            resultsDiv.classList.add('show');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Load example on page load
+        document.getElementById('inputText').value = 'The Earth revolves around the Sun.\nWater boils at 100 degrees Celsius at sea level.\nThe Great Wall of China is visible from space.';
+    </script>
+</body>
+</html>
