@@ -6,6 +6,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path'); // ADDED: For serving static files
 
 // Initialize app
 const app = express();
@@ -14,7 +15,9 @@ const PORT = process.env.PORT || 8080;
 // ============================================
 // MIDDLEWARE
 // ============================================
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false, // ADDED: Allows inline scripts for HTML
+}));
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -22,6 +25,17 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// ============================================
+// SERVE STATIC FILES (ADDED)
+// ============================================
+// Serve static files from current directory
+app.use(express.static(__dirname));
+
+// Serve index.html at root
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // ============================================
 // CACHE (In-memory)
@@ -93,24 +107,40 @@ app.get('/ping', (req, res) => {
 });
 
 // ============================================
-// ROOT ENDPOINT
+// ROOT ENDPOINT - Serve HTML Dashboard (MODIFIED)
 // ============================================
 app.get('/', (req, res) => {
-    res.status(200).json({
-        name: 'TruthEngine Ultimate',
-        version: '3.0.0',
-        description: 'AI Fact-Checking Platform',
-        status: 'operational',
-        endpoints: {
-            health: 'GET /health',
-            verify: 'POST /api/v1/verify',
-            sync: 'POST /api/v1/verify/sync',
-            async: 'POST /api/v1/verify/async',
-            job: 'GET /api/v1/jobs/:jobId',
-            stats: 'GET /api/v1/stats',
-            cache: 'DELETE /api/v1/cache'
-        }
-    });
+    // Check if index.html exists, if not serve JSON
+    const fs = require('fs');
+    const indexPath = path.join(__dirname, 'index.html');
+    
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(200).json({
+            name: 'TruthEngine Ultimate',
+            version: '3.0.0',
+            description: 'AI Fact-Checking Platform',
+            status: 'operational',
+            endpoints: {
+                health: 'GET /health',
+                verify: 'POST /api/v1/verify',
+                sync: 'POST /api/v1/verify/sync',
+                async: 'POST /api/v1/verify/async',
+                job: 'GET /api/v1/jobs/:jobId',
+                stats: 'GET /api/v1/stats',
+                cache: 'DELETE /api/v1/cache',
+                dashboard: 'GET /dashboard'
+            }
+        });
+    }
+});
+
+// ============================================
+// DASHBOARD ENDPOINT (ADDED)
+// ============================================
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
 // ============================================
@@ -508,13 +538,20 @@ app.delete('/api/v1/cache', (req, res) => {
 // 404 HANDLER
 // ============================================
 app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        error: {
-            code: 'NOT_FOUND',
-            message: `Endpoint ${req.method} ${req.url} not found`
-        }
-    });
+    // Try to serve index.html for unknown routes (SPA support)
+    const fs = require('fs');
+    const indexPath = path.join(__dirname, 'index.html');
+    if (fs.existsSync(indexPath) && !req.url.startsWith('/api')) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).json({
+            success: false,
+            error: {
+                code: 'NOT_FOUND',
+                message: `Endpoint ${req.method} ${req.url} not found`
+            }
+        });
+    }
 });
 
 // ============================================
@@ -543,6 +580,8 @@ const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`📊 Health: http://localhost:${PORT}/health`);
     console.log(`🔍 Verify: POST http://localhost:${PORT}/api/v1/verify`);
     console.log(`📈 Stats: http://localhost:${PORT}/api/v1/stats`);
+    console.log(`🌐 Dashboard: http://localhost:${PORT}/dashboard`);
+    console.log(`🏠 Home: http://localhost:${PORT}/index.html`);
     console.log('='.repeat(50));
 });
 
