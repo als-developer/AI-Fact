@@ -1,0 +1,7 @@
+# Unda faili la .buildpacks
+echo "https://github.com/heroku/heroku-buildpack-nodejs" > .buildpacks
+
+# Kisha deploy
+git add .buildpacks
+git commit -m "Add buildpacks config"
+git push heroku main
